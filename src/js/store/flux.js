@@ -12,7 +12,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			characters: [],
+			planets: [],
+			vehicles: [],
+
+			character: null,
+			planet: null,
+			vehicle: null,
+
+			favorites: [],
+
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -37,8 +47,80 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
-			}
-		}
+			},
+
+		
+		/* Load characters, planets & vehicles */
+
+			loadCharacters: () => {
+				fetch("https://www.swapi.tech/api/people")
+					.then((res) => res.json())
+					.then((response) => {
+						console.log(response);
+						setStore({characters: response.results})
+					});
+			},
+			loadPlanets: () => {
+				fetch("https://www.swapi.tech/api/planets")
+					.then(res => res.json())
+					.then((response) => {
+						console.log(response);
+						setStore({planets: response.results})
+					});
+			},
+			loadVehicles: () => {
+				fetch("https://www.swapi.tech/api/vehicles")
+					.then(res => res.json())
+					.then((response) =>{
+						console.log(response);
+						setStore({vehicles: response.results})
+					});
+              
+			},
+
+		
+			/* Get characters, planets & vehicles */
+			getCharacter: (uid) => {
+				//fetch("https://www.swapi.tech/api/people/" + id)
+				fetch(`https://www.swapi.tech/api/people/${uid}`)
+					.then(res => res.json())
+					.then((response) =>{
+						console.log(response);
+						setStore({character: response.result.properties})
+					});
+			},
+
+			getPlanet: (uid) => {
+				//fetch("https://www.swapi.tech/api/planets/" + id)
+				fetch(`https://www.swapi.tech/api/planets/${uid}`)
+					.then(res => res.json())
+					.then((response) =>{
+						console.log(response);
+						setStore({planet: response.result.properties})
+					});
+			},
+
+			getVehicle: (uid) => {
+				//fetch("https://www.swapi.tech/api/vehicles/" + id)
+				fetch(`https://www.swapi.tech/api/vehicles/${uid}`)
+					.then(res => res.json())
+					.then((response) =>{
+						console.log(response);
+						setStore({vehicle: response.result.properties})
+					});
+			},
+
+			setFavorite: (element) => {
+				const store = getStore();
+				// store.favorite = ["character 1"]
+				if(!store.favorites.includes(element)) {
+					setStore ({favorites : [...store.favorites, element]})
+				}
+				
+				// setStore({favorites: [...store.favorites, element]});
+			},
+			
+		},
 	};
 };
 
